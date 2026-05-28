@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Invitation {
+  id             Int           @id @default(autoincrement())
+  slug           String        @unique
+  title          String?
+  groomName      String
+  groomFullName  String?
+  groomParent    String?
+  groomPhoto     String?
+  groomChild     String?
+  brideName      String
+  brideFullName  String?
+  brideParent    String?
+  bridePhoto     String?
+  brideChild     String?
+  eventDate      String?
+  eventTime      String?
+  eventTitle     String?
+  address        String?
+  mapsUrl        String?
+  mapsEmbedUrl   String?
+  story          String?
+  quoteText      String?
+  quoteAuthor    String?
+  colorPrimary   String        @default("#d4a574")
+  colorSecondary String        @default("#f5e6d3")
+  colorAccent    String        @default("#8b6914")
+  bgMusicType    String?       @default("youtube")
+  bgMusicFile    String?
+  bgMusicUrl     String?
+  bgMusicAuto    Boolean       @default(true)
+  themeStyle     String        @default("elegant")
+  fontStyle      String        @default("modern")
+  instagramUrl   String?
+  invitationType String        @default("pernikahan")
+  coverPhoto     String?
+  dressCode1     String?
+  dressCode2     String?
+  dressCode3     String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  photos       Photo[]
+  bankAccounts BankAccount[]
+  wishMessages WishMessage[]
+}
+
+model Photo {
+  id           Int        @id @default(autoincrement())
+  invitationId Int
+  url          String
+  caption      String?
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+}
+
+model BankAccount {
+  id            Int        @id @default(autoincrement())
+  invitationId  Int
+  type          String
+  bankName      String?
+  accountName   String
+  accountNumber String
+  provider      String?
+  logo         String?
+  createdAt     DateTime   @default(now())
+  invitation    Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+}
+
+model WishMessage {
+  id           Int        @id @default(autoincrement())
+  invitationId Int
+  name         String
+  message      String
+  attendance   String?
+  createdAt    DateTime   @default(now())
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+}
